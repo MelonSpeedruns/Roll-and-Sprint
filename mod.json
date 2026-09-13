@@ -1,7 +1,7 @@
 {
-  "id": "com.example.my_mod",
-  "name": "My Mod",
+  "id": "com.melonspeedruns.rollandsprint",
+  "name": "Roll and Sprint",
   "version": "1.0.0",
-  "author": "You",
-  "description": "An example Dusklight mod"
+  "author": "MelonSpeedruns",
+  "description": "A simple mod where holding A after a Roll will have link sprint. You can also Jump Slash by pressing B while sprinting."
 }
