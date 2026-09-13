@@ -1,4 +1,4 @@
-#include "mods/hook.hpp"
+#include "mods/svc/hook.hpp"
 #include "mods/service.hpp"
 #include "mods/svc/hook.h"
 #include "mods/svc/log.h"
@@ -26,7 +26,7 @@ static HookAction on_create_item_pre(ModContext*, void* args, void*, void*) {
 extern "C" {
 MOD_EXPORT ModResult mod_initialize(ModError*) {
     // Installs a pre hook on fopAcM_createItem.
-    ModResult result = mods::hook_add_pre<CreateItem>(svc_hook, on_create_item_pre);
+    ModResult result = mods::hook::add_pre<CreateItem>(on_create_item_pre);
     if (result != MOD_OK) {
         svc_log->error(mod_ctx, "failed to install on_create_item_pre");
         return result;
