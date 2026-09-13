@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
-project(my_mod CXX)
+project(roll_and_sprint CXX)
 
 # The Dusklight version to build against: a release tag (e.g. "v1.5.0") or a commit SHA.
 if (NOT DUSKLIGHT_VERSION)
@@ -10,11 +10,8 @@ endif ()
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/FetchDusklight.cmake")
 add_subdirectory("${DUSKLIGHT_DIR}/sdk" dusklight-sdk EXCLUDE_FROM_ALL)
 
-add_mod(my_mod
-        FEATURES game          # remove for service/asset-only mods; add webgpu for GfxService
+add_mod(roll_and_sprint
+        FEATURES game
         SOURCES src/mod.cpp
         MOD_JSON mod.json
-        RES_DIR res            # mod resources, including icon.png and banner.png
-        OVERLAY_DIR overlay    # game file overlays; remove if unused
-        TEXTURES_DIR textures  # texture replacements; remove if unused
 )
