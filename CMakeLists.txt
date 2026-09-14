@@ -14,4 +14,5 @@ add_mod(roll_and_sprint
         FEATURES game
         SOURCES src/mod.cpp
         MOD_JSON mod.json
+		RES_DIR res
 )
