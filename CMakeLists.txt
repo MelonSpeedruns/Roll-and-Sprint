@@ -3,7 +3,7 @@ project(roll_and_sprint CXX)
 
 # The Dusklight version to build against: a release tag (e.g. "v1.5.0") or a commit SHA.
 if (NOT DUSKLIGHT_VERSION)
-    set(DUSKLIGHT_VERSION "07b2f5accf96d9e59dde91741781a3511598a84c")
+    set(DUSKLIGHT_VERSION "158abde3816042eeb52f9bda5a7fac50487d4451")
 endif ()
 # Fetches the Dusklight sources into ./dusklight and provides DUSKLIGHT_DIR.
 # Use -DDUSKLIGHT_DIR= to point at an existing Dusklight checkout.
