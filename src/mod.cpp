@@ -12,11 +12,13 @@ IMPORT_SERVICE(ConfigService, svc_config);
 DEFINE_HOOK(&daAlink_c::procMoveInit, LinkProcMoveInit);
 DEFINE_HOOK(&daAlink_c::setDoubleAnime, LinkSetDoubleAnime);
 DEFINE_HOOK(&daAlink_c::checkNormalAction, LinkCheckCutAction);
+DEFINE_HOOK(&daAlink_c::decideCommonDoStatus, LinkDecideCommonDoStatus);
 
 UiElementHandle statusText = 0;
 ConfigVarHandle var = 0;
 
 bool running = false;
+bool holdingA = false;
 
 extern "C" {
 
@@ -31,6 +33,7 @@ HookAction link_proc_move_init_pre(ModContext* ctx, void* args, void* retval, vo
 
             link->setSwordVoiceSe(Z2SE_AL_V_THROW_IB);
             running = true;
+            holdingA = true;
         }
     }
     return HOOK_CONTINUE;
@@ -78,6 +81,22 @@ HookAction link_check_cut_action_pre(ModContext* ctx, void* args, void* retval, 
     return HOOK_CONTINUE;
 }
 
+void link_decide_common_do_status_post(ModContext* ctx, void* args, void* retval, void*) {
+    daAlink_c* link = daAlink_getAlinkActorClass();
+
+    if (dComIfGp_getDoStatus() == BUTTON_STATUS_UNK_121)
+    {
+        if (running)
+        {
+            link->setDoStatus(BUTTON_STATUS_CANCEL);
+        }
+        else if (holdingA)
+        {
+            link->setDoStatus(BUTTON_STATUS_NONE);
+        }
+    }
+}
+
 ModResult build(ModContext*, UiElementHandle panel, void*, ModError*) {
     svc_ui->pane_add_section(mod_ctx, panel, "Settings");
 
@@ -110,6 +129,7 @@ MOD_EXPORT ModResult mod_initialize(ModError*) {
     mods::hook::add_pre<LinkProcMoveInit>(link_proc_move_init_pre);
     mods::hook::add_pre<LinkSetDoubleAnime>(link_set_double_anime_pre);
     mods::hook::add_pre<LinkCheckCutAction>(link_check_cut_action_pre);
+    mods::hook::add_post<LinkDecideCommonDoStatus>(link_decide_common_do_status_post);
 
     UiModsPanelDesc panel = UI_MODS_PANEL_DESC_INIT;
     panel.build = build;
@@ -121,10 +141,20 @@ MOD_EXPORT ModResult mod_initialize(ModError*) {
 
 MOD_EXPORT ModResult mod_update(ModError*) {
     daAlink_c* link = daAlink_getAlinkActorClass();
-    if (running && mDoCPd_c::getHoldA(0) == 0 || (link && link->checkEventRun()) ||
-        (link && link->mProcID != daAlink_c::daAlink_PROC::PROC_MOVE))
+    if (mDoCPd_c::getHoldA(0) == 0)
     {
-        running = false;
+        holdingA = false;
+    }
+
+    if (link)
+    {
+        if (running && !holdingA && mDoCPd_c::getHoldA(0) != 0 || (link->checkEventRun()) ||
+            (link->mProcID != daAlink_c::daAlink_PROC::PROC_MOVE) || mDoCPd_c::getStickValue(0) == 0)
+        {
+            running = false;
+            // If running is false but this is true then we want to avoid rolling
+            holdingA = true;
+        }
     }
 
     return MOD_OK;
