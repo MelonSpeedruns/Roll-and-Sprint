@@ -91,6 +91,7 @@ void link_decide_common_do_status_post(ModContext* ctx, void* args, void* retval
     bool toggle = false;
     svc_config->get_bool(mod_ctx, toggle_var, &toggle);
 
+    // BUTTON_STATUS_UNK_121 is Roll
     if (dComIfGp_getDoStatus() == BUTTON_STATUS_UNK_121)
     {
         if (!toggle)
