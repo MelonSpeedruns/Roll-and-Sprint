@@ -119,8 +119,6 @@ ModResult build(ModContext*, UiElementHandle panel, void*, ModError*) {
 }
 
 ModResult update(ModContext*, void*, ModError*) {
-    svc_ui->elem_set_text(mod_ctx, statusText1, "running");
-    svc_ui->elem_set_text(mod_ctx, statusText2, "running");
     return MOD_OK;
 }
 
