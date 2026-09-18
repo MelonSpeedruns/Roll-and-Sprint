@@ -1,4 +1,5 @@
 #include "d/actor/d_a_alink.h"
+#include "d/d_camera.h"
 #include "mods/service.hpp"
 #include "mods/svc/hook.h"
 #include "mods/svc/hook.hpp"
@@ -33,6 +34,10 @@ HookAction link_proc_move_init_pre(ModContext* ctx, void* args, void* retval, vo
 
             link->setSwordVoiceSe(Z2SE_AL_V_THROW_IB);
             running = true;
+            dCamera_c* camera = dCam_getBody();
+            if (camera) {
+                camera->mCamParam.mManualMode = 0;
+            }
         }
     }
     return HOOK_CONTINUE;
